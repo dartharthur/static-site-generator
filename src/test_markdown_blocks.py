@@ -17,7 +17,7 @@ from markdown_blocks import (
 )
 
 
-class TestBlockMarkdown(unittest.TestCase):
+class TestMarkdownBlocks(unittest.TestCase):
     def test_create_blocks(self):
         markdown = """# This is a heading
 
