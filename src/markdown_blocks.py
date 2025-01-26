@@ -11,14 +11,26 @@ def is_paragraph(block):
     return False
 
 def is_heading(block):
-    pattern = r"^#{1,6}\s[^#].*$|^#{1,6}\s.*[^#\s]#*\s*$"
+    # ^ start of string
+    # #{1,6} one to six # characters
+    # \s+ at least one whitespace character
+    # .+ at least one of any character
+    # $ end of string
+    pattern = r"^#{1,6}\s+.+$"
     return bool(re.match(pattern, block))
 
 def is_code(block):
-    return False
+    split_block = block.split("```")
+    if len(split_block) != 3:
+        return False
+    if split_block[0] != "" or split_block[2] != "":
+        return False
+    return True
 
 def is_quote(block):
-    return False
+    if not block or block == ">":
+        return False
+    return all(line.startswith('>') for line in block.splitlines())
 
 def is_unordered_list(block):
     return False
@@ -28,7 +40,11 @@ def is_ordered_list(block):
 
 block_handler_map = {
     PARAGRAPH: is_paragraph,
-    HEADING: is_heading
+    HEADING: is_heading,
+    CODE: is_code,
+    QUOTE: is_quote,
+    UNORDERED_LIST: is_unordered_list,
+    ORDERED_LIST: is_ordered_list,
 }
 
 def markdown_to_blocks(markdown):
@@ -43,4 +59,7 @@ def markdown_to_blocks(markdown):
     return [block for block in markdown.split("\n\n") if block.strip()]
 
 def block_to_block_type(block):
-    return block
+    for block_type, handler in block_handler_map.items():
+        if handler(block):
+            return block_type
+    raise ValueError("Unkown block type")
