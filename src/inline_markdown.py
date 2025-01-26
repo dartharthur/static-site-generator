@@ -74,6 +74,16 @@ def split_nodes_link(old_nodes):
             new_nodes.append(old_node)
             continue
         for link_text, link_url in links:
+            # Another clever technique here
+            # Maxsplit allows us to control how many times we split a string
+            # If we split on the full markdown for a link, and set maxsplit to 1
+            # Then the first string in the result is everything up to the link
+            # And the second string is everything after, or the remaining string
+            # We know that:
+            #   - we can treat everything up to the delimiter as a textnode
+            #   - we can then take the current link and convert it to a node of type Link
+            #   - we can finally take the remaining string and continue to split on that because
+            #     it may contain additional links
             sections = remaining_text.split(f"[{link_text}]({link_url})", 1)
             if len(sections) != 2:
                 raise ValueError("Invalid markdown, link section not close")
