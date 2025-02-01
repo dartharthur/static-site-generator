@@ -46,7 +46,10 @@ def block_type_code_to_html_node(block):
     return code_html_node
 
 def block_type_quote_to_html_node(block):
-    return block
+    quote_text = " ".join([text.lstrip("> ") for text in block.split("\n")])
+    quote_child_nodes = text_to_html_children(quote_text)
+    quote_html_node = ParentNode("blockquote", quote_child_nodes)
+    return quote_html_node
 
 def block_type_unordered_list_to_html_node(block):
     list_items_parent_nodes = block_type_list_to_html_children(block)
