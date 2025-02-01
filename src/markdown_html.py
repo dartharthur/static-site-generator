@@ -20,7 +20,9 @@ def text_to_html_children(text):
     return html_nodes
 
 def block_type_paragraph_to_html_node(block):
-    return block
+    p_child_nodes = text_to_html_children(block)
+    p_html_node = ParentNode("p", p_child_nodes)
+    return p_html_node
 
 def block_type_heading_to_html_node(block):
     hashes, text = block.split(" ", 1)
@@ -37,8 +39,8 @@ def block_type_quote_to_html_node(block):
 
 def block_type_unordered_list_to_html_node(block):
     list_items_text = [text.lstrip("* ") for text in block.split("\n")]
-    list_items_html_nodes = [text_to_html_children(text) for text in list_items_text]
-    list_items_parent_nodes = [ParentNode("li", li_child_nodes) for li_child_nodes in list_items_html_nodes]
+    list_items_child_nodes = [text_to_html_children(text) for text in list_items_text]
+    list_items_parent_nodes = [ParentNode("li", li_child_node) for li_child_node in list_items_child_nodes]
     unordered_list_html_node = ParentNode("ul", list_items_parent_nodes)
     return unordered_list_html_node
 
