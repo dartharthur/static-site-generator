@@ -20,7 +20,12 @@ class TestMarkdownHTML(unittest.TestCase):
 
         html_node = markdown_to_html_node(markdown)
         actual_markup = html_node.to_html()
-        expected_markup="<div><h1>This is a heading</h1><ul><li>This is the <b>first</b> list item in a list block</li><li>This is a list item</li><li>This is another list item</li></ul></div>"
+        expected_markup = (
+            "<div>"
+            "<h1>This is a heading</h1>"
+            "<ul><li>This is the <b>first</b> list item in a list block</li><li>This is a list item</li><li>This is another list item</li></ul>"
+            "</div>"
+        )
         self.assertEqual(expected_markup, actual_markup)
 
     def test_create_html_three_block(self):
@@ -28,17 +33,17 @@ class TestMarkdownHTML(unittest.TestCase):
 
 This is a paragraph of text. It has some **bold** and *italic* words inside of it.
 
-* This is the first list item in a list block
+* This is the **first** list item in a list block
 * This is a list item
 * This is another list item"""
 
         html_node = markdown_to_html_node(markdown)
         actual_markup = html_node.to_html()
-        expected_markup= (
+        expected_markup = (
             "<div>"
             "<h1>This is a heading</h1>"
             "<p>This is a paragraph of text. It has some <b>bold</b> and <i>italic</i> words inside of it.</p>"
-            "<ul><li>This is the first list item in a list block</li><li>This is a list item</li><li>This is another list item</li></ul>"
+            "<ul><li>This is the <b>first</b> list item in a list block</li><li>This is a list item</li><li>This is another list item</li></ul>"
             "</div>"
         )
         self.assertEqual(expected_markup, actual_markup)
@@ -49,7 +54,7 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
 
 This is a paragraph of text. It has some **bold** and *italic* words inside of it.
 
-* This is the first list item in a list block
+* This is the **first** list item in a list block
 * This is a list item
 * This is another list item
 
@@ -59,11 +64,11 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
 
         html_node = markdown_to_html_node(markdown)
         actual_markup = html_node.to_html()
-        expected_markup= (
+        expected_markup = (
             "<div>"
             "<h1>This is a heading</h1>"
             "<p>This is a paragraph of text. It has some <b>bold</b> and <i>italic</i> words inside of it.</p>"
-            "<ul><li>This is the first list item in a list block</li><li>This is a list item</li><li>This is another list item</li></ul>"
+            "<ul><li>This is the <b>first</b> list item in a list block</li><li>This is a list item</li><li>This is another list item</li></ul>"
             "<ol><li>1. This is the first list item in a list block</li><li>2. This is a list item</li><li>3. This is another list item</li></ol>"
             "</div>"
         )
