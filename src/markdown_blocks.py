@@ -8,13 +8,14 @@ BLOCK_TYPE_UNORDERED_LIST = "unordered_list"
 BLOCK_TYPE_ORDERED_LIST = "ordered_list"
 
 def is_heading(block):
+    text = "".join(block.strip().splitlines())
     # ^ start of string
     # #{1,6} one to six # characters
     # \s+ at least one whitespace character
     # .+ at least one of any character
     # $ end of string
     pattern = r"^#{1,6}\s+.+$"
-    return bool(re.match(pattern, block))
+    return bool(re.match(pattern, text))
 
 def is_code(block):
     split_block = block.split("```")
@@ -27,12 +28,15 @@ def is_code(block):
 def is_quote(block):
     if not block or block == ">":
         return False
-    return all(line.startswith('>') for line in block.splitlines())
+    lines = block.strip().splitlines()
+    if not lines:
+        return False
+    return all(line.startswith('>') for line in lines)
 
 def is_unordered_list(block):
     if not block:
         return False
-    return all((line.startswith('* ') or line.startswith("- ")) for line in block.splitlines())
+    return all((line.startswith('* ') or line.startswith("- ")) for line in block.strip().splitlines())
 
 def is_ordered_list(block):
     if not block:

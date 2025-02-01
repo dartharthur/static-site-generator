@@ -20,21 +20,14 @@ def text_to_html_children(text):
     html_nodes = [text_node_to_html_node(text_node) for text_node in text_nodes]
     return html_nodes
 
-# Helper for ordered and unordered lists.
-# The logic for generating the children is the same in either list type.
-# So this helper keeps that logic in one place.
-def block_type_list_to_html_children(block):
-    list_items_text = [text.lstrip("* ") for text in block.split("\n")]
-    list_items_child_nodes = [text_to_html_children(text) for text in list_items_text]
-    return [ParentNode("li", li_child_node) for li_child_node in list_items_child_nodes]
-
 def block_type_paragraph_to_html_node(block):
-    p_child_nodes = text_to_html_children(block)
+    text = " ".join(block.split("\n")).lstrip(" ")
+    p_child_nodes = text_to_html_children(text)
     p_html_node = ParentNode("p", p_child_nodes)
     return p_html_node
 
 def block_type_heading_to_html_node(block):
-    hashes, text = block.split(" ", 1)
+    hashes, text = "".join(block.strip().splitlines()).split(" ", 1)
     hash_count = len(hashes)
     tag = f"h{hash_count}"
     heading_html_node = LeafNode(tag, text)
@@ -46,18 +39,25 @@ def block_type_code_to_html_node(block):
     return code_html_node
 
 def block_type_quote_to_html_node(block):
-    quote_text = " ".join([text.lstrip("> ") for text in block.split("\n")])
+    lines = block.strip().splitlines()
+    quote_text = " ".join([text.lstrip("> ") for text in lines])
     quote_child_nodes = text_to_html_children(quote_text)
     quote_html_node = ParentNode("blockquote", quote_child_nodes)
     return quote_html_node
 
 def block_type_unordered_list_to_html_node(block):
-    list_items_parent_nodes = block_type_list_to_html_children(block)
+    lines = block.strip().splitlines()
+    list_items_text = [text[2:] for text in lines]
+    list_items_child_nodes = [text_to_html_children(text) for text in list_items_text]
+    list_items_parent_nodes = [ParentNode("li", li_child_node) for li_child_node in list_items_child_nodes]
     unordered_list_html_node = ParentNode("ul", list_items_parent_nodes)
     return unordered_list_html_node
 
 def block_type_ordered_list_to_html_node(block):
-    list_items_parent_nodes = block_type_list_to_html_children(block)
+    numbered_lines = block.strip().splitlines()
+    list_items_text = [line[3:] for line in numbered_lines]
+    list_items_child_nodes = [text_to_html_children(text) for text in list_items_text]
+    list_items_parent_nodes = [ParentNode("li", li_child_node) for li_child_node in list_items_child_nodes]
     ordered_list_html_node = ParentNode("ol", list_items_parent_nodes)
     return ordered_list_html_node
 
