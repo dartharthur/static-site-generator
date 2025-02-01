@@ -41,7 +41,9 @@ def block_type_heading_to_html_node(block):
     return heading_html_node
 
 def block_type_code_to_html_node(block):
-    return block
+    code_child_nodes = text_to_html_children(block)
+    code_html_node = ParentNode("pre", code_child_nodes)
+    return code_html_node
 
 def block_type_quote_to_html_node(block):
     return block
