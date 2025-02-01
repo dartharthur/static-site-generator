@@ -87,8 +87,8 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
         self.assertFalse(is_unordered_list("-No space after marker"))
         self.assertFalse(is_unordered_list("* First line\nSecond line"))
         self.assertFalse(is_unordered_list("Text\n* List"))
-        # self.assertFalse(is_unordered_list("* ")) todo: fix
-        # self.assertFalse(is_unordered_list("*")) todo: fix
+        self.assertFalse(is_unordered_list("* "))
+        self.assertFalse(is_unordered_list("*"))
         self.assertFalse(is_unordered_list("Regular text"))
         self.assertFalse(is_unordered_list("1. Ordered list item"))
 
