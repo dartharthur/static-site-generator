@@ -14,10 +14,19 @@ from markdown_blocks import (
     BLOCK_TYPE_ORDERED_LIST,
 )
 
+
 def text_to_html_children(text):
     text_nodes = text_to_textnodes(text)
     html_nodes = [text_node_to_html_node(text_node) for text_node in text_nodes]
     return html_nodes
+
+# Helper for ordered and unordered lists.
+# The logic for generating the children is the same in either list type.
+# So this helper keeps that logic in one place.
+def block_type_list_to_html_children(block):
+    list_items_text = [text.lstrip("* ") for text in block.split("\n")]
+    list_items_child_nodes = [text_to_html_children(text) for text in list_items_text]
+    return [ParentNode("li", li_child_node) for li_child_node in list_items_child_nodes]
 
 def block_type_paragraph_to_html_node(block):
     p_child_nodes = text_to_html_children(block)
@@ -38,14 +47,14 @@ def block_type_quote_to_html_node(block):
     return block
 
 def block_type_unordered_list_to_html_node(block):
-    list_items_text = [text.lstrip("* ") for text in block.split("\n")]
-    list_items_child_nodes = [text_to_html_children(text) for text in list_items_text]
-    list_items_parent_nodes = [ParentNode("li", li_child_node) for li_child_node in list_items_child_nodes]
+    list_items_parent_nodes = block_type_list_to_html_children(block)
     unordered_list_html_node = ParentNode("ul", list_items_parent_nodes)
     return unordered_list_html_node
 
 def block_type_ordered_list_to_html_node(block):
-    return block
+    list_items_parent_nodes = block_type_list_to_html_children(block)
+    ordered_list_html_node = ParentNode("ol", list_items_parent_nodes)
+    return ordered_list_html_node
 
 block_to_html_node_handler_map = {
     BLOCK_TYPE_PARAGRAPH: block_type_paragraph_to_html_node,
