@@ -45,7 +45,7 @@ def is_ordered_list(block):
         line_count += 1
     return True
 
-block_handler_map = {
+block_to_block_type_handler_map = {
     BLOCK_TYPE_HEADING: is_heading,
     BLOCK_TYPE_CODE: is_code,
     BLOCK_TYPE_QUOTE: is_quote,
@@ -65,7 +65,7 @@ def markdown_to_blocks(markdown):
     return [block for block in markdown.split("\n\n") if block.strip()]
 
 def block_to_block_type(block):
-    for block_type, handler in block_handler_map.items():
+    for block_type, handler in block_to_block_type_handler_map.items():
         if handler(block):
             return block_type
     return BLOCK_TYPE_PARAGRAPH
